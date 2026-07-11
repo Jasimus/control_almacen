@@ -1,14 +1,15 @@
 from ast import List
 import os
-
 import pandas as pd
 import sys
 from ubic import Ubic
 from rel_ubic import ProdUbic
 from openpyxl import load_workbook
+import colors
 
 def main():
     file = 'deposito.xlsx'
+    user = None
 
     try:
         user = sys.argv[1]
@@ -23,7 +24,7 @@ def main():
         book = load_workbook(file)
 
     except FileNotFoundError:
-        print(f"El archivo {file} no existe. Se creará uno nuevo.")
+        print(f"{colors.YELLOW}El archivo {file} no existe. Se creará uno nuevo.{colors.WHITE}")
         df_ubic = pd.DataFrame(columns=['id', 'depo', 'pasillo', 'columna', 'nivel', 'ubic'])
         df_articulos = pd.DataFrame(columns=['id_usuario', 'id_ubicacion', 'id_lote'])
 
@@ -31,9 +32,6 @@ def main():
             df_ubic.to_excel(writer, sheet_name='ubicacion', index=False)
             df_articulos.to_excel(writer, sheet_name='articulos', index=False)
 
-        book = load_workbook(file)
-
-    user = None
 
     while True:
         ubicacion_input = input("Escanee o ingrese la ubicación.\nSi ya no desea escanear más ubicaciones, ingrese 0.\n(INPUT): ")
@@ -42,7 +40,7 @@ def main():
             print(f"MUCHAS GRACIAS {user}. CHAU.")
             break
         if len(ubicacion_input) != 10:
-            print("EL FORMATO NO COINCIDE CON EL DE LA UBICACIÓN. REINTENTE")
+            print(f"{colors.YELLOW}EL FORMATO NO COINCIDE CON EL DE LA UBICACIÓN. REINTENTE{colors.WHITE}")
             continue
         
         ubicacion = Ubic(ubicacion_input)
@@ -64,19 +62,18 @@ def main():
         os.system("clear")
         
         while True:
-            articulo_input = input("Ingrese/Escanee el código del articulo.\nSi ya termino de escanear, ingrese 0.\n(INPUT): ")
-            #articulo_input = "fjey975"
+            articulo_input = input(f"Ingrese/Escanee el código del articulo. UBIC: {ubicacion.id}\n0. Ver artículos\n(INPUT): ")
             siguiente = False
 
             if articulo_input == "0":
                 os.system("clear")
-                print("Los articulos cargados son: ")
+                print("ARTICULOS CARGADOS:")
                 for a in articulos:
                     print("-------")
                     print(a)
                     print("-------\n")
-                print(f"Cantidad de rollos: {len(articulos)}")
-                respuesta = input("Para confirmar presione 0.\nSi desea agregar más rollos presione 1.\n> RESPUESTA: ")
+                print(f"CANTIDAD: {len(articulos)}")
+                respuesta = input("0. Confirmar\n1. Agregar más artículos\n> RESPUESTA: ")
                 os.system("clear")
                 if respuesta == "0":
                     break
@@ -85,29 +82,31 @@ def main():
 
             elif len(articulo_input) != 7:
                 os.system("clear")
-                print("EL ARTICULO NO CUMPLE CON EL FORMATO. REINTENTE.")
+                print(f"{colors.YELLOW}EL ARTICULO NO CUMPLE CON EL FORMATO. REINTENTE.{colors.WHITE}")
 
                 siguiente=True
             
             for a in articulos:
                 if a.id_lote == articulo_input:
                     os.system("clear")
-                    print("NO PUEDE INGRESAR EL MISMO ARTICULO. REINTENTE.")
+                    print(f"{colors.RED}NO PUEDE INGRESAR EL MISMO ARTICULO. REINTENTE.{colors.WHITE}")
                     siguiente=True
             
             if siguiente:
                 continue
             
+            os.system("clear")
             articulo = ProdUbic(user,ubicacion.id,articulo_input)
-            print(articulo.__dict__)
             
             articulos.append(articulo)
-            os.system("clear")
-            print("ARTICULO INGRESADO EXITOSAMENTE.")
+            print(f"{colors.GREEN}ARTICULO INGRESADO EXITOSAMENTE.{colors.WHITE}")
         
+
         df_articulos = pd.DataFrame([a.__dict__ for a in articulos])
 
         print(df_articulos)
+        print("-" * 35)
+        print("\n")
 
         with pd.ExcelWriter(file, engine='openpyxl', mode='a', if_sheet_exists='overlay') as writer:
             art_sheet = 'articulos'
