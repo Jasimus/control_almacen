@@ -6,4 +6,4 @@ class Ubic:
         self.pasillo = id_sep[1]
         self.columna = id_sep[2]
         self.nivel = id_sep[3]
-        self.ubic = "DPA"
+        self.ubic = id
