@@ -2,7 +2,7 @@ import re
 
 # Regex patterns
 LOCATION_RE = re.compile(r'^[A-Z0-9]{10}$')  # 10 uppercase alphanumeric characters
-ROLL_RE = re.compile(r'^[A-Za-z0-9]{7}$')    # 7 alphanumeric characters
+ROLL_RE = re.compile(r'^[A-Za-z0-9]{9}$')    # 7 alphanumeric characters
 
 ERROR_MSG_LOCATION = "EL FORMATO NO COINCIDE CON EL DE LA UBICACIÓN. REINTENTE"
 ERROR_MSG_ROLL = "EL ARTICULO NO CUMPLE CON EL FORMATO. REINTENTE."

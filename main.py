@@ -159,7 +159,7 @@ def main():
                     for i, a in enumerate(articulos, 1):
                         print(f"{colors.CYAN}[{i}]{colors.WHITE}")
                         print(f"   USUARIO: {a.id_usuario}")
-                        print(f"   UBICACIÓN: {a.id_ubicacion}")
+                        print(f"   UBICACIÓN: {a.id_ubic}")
                         print(f"   LOTE: {a.id_lote}")
                         print(f"   FECHA/HORA: {a.fecha_hora}")
                         print_separator()
@@ -206,7 +206,7 @@ def main():
                 continue
             
             clear_screen()
-            articulo = ProdUbic(user,ubicacion.id,articulo_input)
+            articulo = ProdUbic(user,ubicacion.id,articulo_input[:-2])
             
             articulos.append(articulo)
             existing_rolls.add(articulo_input)
