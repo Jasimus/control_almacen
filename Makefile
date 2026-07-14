@@ -1,4 +1,4 @@
-.PHONY: build clean test
+.PHONY: build clean test termux
 
 build:
 	uv run pyinstaller build.spec --clean
@@ -8,3 +8,6 @@ clean:
 
 test:
 	uv run pytest tests/ -v
+
+termux:
+	bash build_termux.sh
